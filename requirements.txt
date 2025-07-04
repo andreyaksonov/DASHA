@@ -1,2 +1,2 @@
-openai==0.28.0
-pyTelegramBotAPI==0.0.5
+openai==1.93.0
+pyTelegramBotAPI==4.27.0
