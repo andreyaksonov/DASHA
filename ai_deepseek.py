@@ -36,18 +36,19 @@ class AI:
                 j.pop(1)
                 json.dump(j, f)
 
-    @classmethod
-    def _add_new_message(cls, msg: types.Message):
-        hist = cls.get_history()
-        with open("chat_history.json", 'w', encoding="utf-8") as f:
-            hist.append(
-                {
-                    "role": "user",
-                    "content": f"@{msg.from_user.username} (Справжнє імʼя {msg.from_user.first_name} {msg.from_user.last_name if msg.from_user.last_name is not None else ''}) сказав: \"{msg.text}\""
-                }
-            )
-            json.dump(hist, f)
-        cls._delete_cache()
+  @classmethod
+def _add_new_message(cls, msg: types.Message):
+    hist = cls.get_history()
+    with open("chat_history.json", 'w', encoding="utf-8") as f:
+        # Витягуємо тільки суть повідомлення:
+        content = msg.text
+        # Якщо повідомлення містить конструкцію "@username ... сказав: ..."
+        if 'сказав:' in content:
+            content = content.split('сказав:', 1)[-1].strip().strip('"')
+        hist.append({"role": "user", "content": content})
+        json.dump(hist, f)
+    cls._delete_cache()
+
 
     # Send request
     @classmethod
