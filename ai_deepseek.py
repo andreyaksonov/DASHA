@@ -30,25 +30,24 @@ class AI:
     @classmethod
     def _delete_cache(cls):
         """Deletes excessive cache depending on settings"""
-        if len(cls.get_history())-1 > cls.settings["message_history_length"]:
+        if len(cls.get_history()) - 1 > cls.settings["message_history_length"]:
             j = cls.get_history()
             with open("chat_history.json", 'w', encoding="utf-8") as f:
                 j.pop(1)
                 json.dump(j, f)
 
-  @classmethod
-def _add_new_message(cls, msg: types.Message):
-    hist = cls.get_history()
-    with open("chat_history.json", 'w', encoding="utf-8") as f:
-        # Витягуємо тільки суть повідомлення:
-        content = msg.text
-        # Якщо повідомлення містить конструкцію "@username ... сказав: ..."
-        if 'сказав:' in content:
-            content = content.split('сказав:', 1)[-1].strip().strip('"')
-        hist.append({"role": "user", "content": content})
-        json.dump(hist, f)
-    cls._delete_cache()
-
+    @classmethod
+    def _add_new_message(cls, msg: types.Message):
+        hist = cls.get_history()
+        with open("chat_history.json", 'w', encoding="utf-8") as f:
+            # Витягуємо тільки суть повідомлення:
+            content = msg.text
+            # Якщо повідомлення містить конструкцію "... сказав: ..."
+            if 'сказав:' in content:
+                content = content.split('сказав:', 1)[-1].strip().strip('"')
+            hist.append({"role": "user", "content": content})
+            json.dump(hist, f)
+        cls._delete_cache()
 
     # Send request
     @classmethod
@@ -65,4 +64,3 @@ def _add_new_message(cls, msg: types.Message):
         )
 
         return response.choices[0].message.content
-
