@@ -58,7 +58,7 @@ class AI:
         # Для нової версії openai (1.x.x)
         response = openai_client.chat.completions.create(
             # model="deepseek-r1-distill-llama-70b",
-            model="gpt-3.5-turbo",
+            model="gpt-4o",  # це ще новіше, ще потужніше і ще дешевше, якщо у тебе доступ є!
             messages=cls.get_history(),
             # temperature=0.7,
         )
