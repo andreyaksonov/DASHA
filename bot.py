@@ -43,10 +43,11 @@ def clear_msg_hist(msg: types.Message):
 
 @bot.message_handler(content_types=["text"])
 def txt_handler(msg: types.Message):
-    should_reply = (
-        bot_username in [word for word in msg.text.split(' ')] or
-        len([1 for word in msg.text.split(' ') if word.strip('?!@#%^&*()').lower() in ["даша", "дашуня", "дашка"]]) > 0 or
-        random.randrange(0, 100) <= 20
-    )
-    if should_reply:
+    text = msg.text.lower()
+    # Реагує лише на згадку або тригер-слово
+    if (
+        bot_username.lower() in text or
+        any(name in text for name in ["даша", "дашуня", "дашка"])
+    ):
         reply_in_topic(msg, f"{AI.send_request(msg)}")
+
